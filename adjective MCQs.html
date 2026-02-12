@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Target Academy - English Adjective Practice</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
+        
+        /* Branding Header */
+        .branding { background: #1a202c; color: white; text-align: center; padding: 15px 10px; border-bottom: 4px solid #ed8936; }
+        .branding h1 { margin: 0; font-size: 28px; color: #ed8936; letter-spacing: 1px; }
+        .branding p { margin: 5px 0 0; font-size: 14px; letter-spacing: 3px; color: #cbd5e0; font-weight: bold; }
+
+        .banner { background: #2b6cb0; color: white; text-align: center; padding: 10px; font-weight: bold; }
+        
+        .score-board { display: flex; justify-content: center; padding: 10px 20px; background: white; border-bottom: 1px solid #ddd; font-weight: bold; }
+
+        .quiz-container { padding: 20px; max-width: 500px; margin: auto; background: white; min-height: 350px; }
+        
+        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; line-height: 1.4; color: #1a202c; }
+        
+        .opt-btn { display: block; width: 100%; padding: 15px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: left; font-size: 16px; background: #f8fafc; cursor: pointer; color: #4a5568; }
+        
+        /* Removed correct/wrong styles to keep it for practice only */
+        .selected { background-color: #ebf8ff; border-color: #4299e1; color: #2b6cb0; font-weight: bold; }
+
+        .nav-footer { display: flex; gap: 10px; padding: 20px; max-width: 500px; margin: auto; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; color: white; cursor: pointer; }
+        .btn-prev { background: #718096; }
+        .btn-next { background: #3182ce; }
+    </style>
+</head>
+<body>
+
+    <div class="branding">
+        <h1>TARGET ACADEMY</h1>
+        <p>KIDWAI NAGAR</p>
+    </div>
+
+    <div class="banner">📝 Adjective Chapter - SSC & Bank Practice</div>
+
+    <div class="score-board">
+        <span id="q-num">प्रशन 1/50</span>
+    </div>
+
+    <div class="quiz-container">
+        <div id="question" class="question">लोड हो रहा है...</div>
+        <div id="options"></div>
+    </div>
+
+    <div class="nav-footer">
+        <button class="btn btn-prev" onclick="change(-1)">Previous</button>
+        <button class="btn btn-next" onclick="change(1)">Next Question</button>
+    </div>
+
+<script>
+    var currentIdx = 0;
+
+    // 50 Questions Based on provided Notes (Rules from images)
+    var questions = [
+        {q:"He is senior ______ me in the office.", o:["than","to","from","for"]},
+        {q:"This book is ______ preferable to that one.", o:["more","most","very","(No word needed)"]},
+        {q:"Of the two candidates, I think the ______ is better suited for the job.", o:["later","latter","last","latest"]},
+        {q:"She is more taller than her sister. (Identify error part)", o:["She is","more taller","than her","sister"]},
+        {q:"The garden is on the ______ side of the house.", o:["posterior","anterior","prior","inferior"]},
+        {q:"I prefer tea ______ coffee.", o:["than","to","more","rather"]},
+        {q:"He arrived ______ to me.", o:["prior","than","before than","more prior"]},
+        {q:"She is ______ junior than me in the office. (Find Error)", o:["She is","junior","than me","No error"]},
+        {q:"The ______ two chapters are easy.", o:["two first","first two","first second","one two"]},
+        {q:"Rohan was ______ kind to help me.", o:["enough smart","smart enough","enough kind","kind enough"]},
+        {q:"He has ______ money to buy a car.", o:["enough","many","few","a few"]},
+        {q:"There were no ______ reasons given for his absence.", o:["farther","further","farthest","furthest"]},
+        {q:"Delhi is ______ from here than Agra.", o:["further","farther","more far","next"]},
+        {q:"Which is the ______ hospital from here?", o:["next","nearest","nearer","most near"]},
+        {q:"She is sitting ______ to me.", o:["next","nearest","nextly","nearer"]},
+        {q:"What is the ______ news?", o:["last","latest","later","latter"]},
+        {q:"I will call you ______.", o:["latter","later","latest","last"]},
+        {q:"Of tea and coffee, I prefer the ______.", o:["later","latter","last","latest"]},
+        {q:"There is ______ water in the jug. (Negative sense)", o:["little","a little","the little","less"]},
+        {q:"______ knowledge is a dangerous thing.", o:["Little","A little","The little","Few"]},
+        {q:"I drank ______ milk left in the bottle.", o:["little","a little","the little","few"]},
+        {q:"______ people know the truth. (Hardly any)", o:["Few","A few","The few","Little"]},
+        {q:"I have read ______ books on this subject. (Positive sense)", o:["few","a few","the few","little"]},
+        {q:"The ______ friends he has are very loyal.", o:["few","a few","the few","many"]},
+        {q:"No ______ than fifty students were present.", o:["less","fewer","few","lesser"]},
+        {q:"He is my ______ brother.", o:["older","elder","oldest","eldest"]},
+        {q:"Ram is ______ than Shyam.", o:["elder","older","eldest","oldest"]},
+        {q:"This temple is ______ than that church.", o:["elder","older","more elder","eldest"]},
+        {q:"This is the ______ unique painting.", o:["most","more","very","(No word needed)"]},
+        {q:"He is the most perfect gentleman. (Correct the sentence)", o:["He is a perfect gentleman","He is most perfect gentleman","He is the more perfect","No correction required"]},
+        {q:"Your answer is ______ perfect than mine.", o:["more","most","(No word needed)","very"]},
+        {q:"The glass is ______ full.", o:["completely","more","most","very"]},
+        {q:"The higher you go, ______ you feel.", o:["cooler","the cooler","more cool","the coolest"]},
+        {q:"The ______ you read, the more you learn.", o:["more","most","much","many"]},
+        {q:"The more he earns, ______ he spends.", o:["more","the more","most","the most"]},
+        {q:"He is ______ of the two boys.", o:["taller","the taller","tallest","the tallest"]},
+        {q:"Which is ______ of the two shirts?", o:["cheaper","the cheaper","cheapest","the cheapest"]},
+        {q:"She is ______ of the two sisters.", o:["prettier","the prettier","prettiest","the prettiest"]},
+        {q:"I bought a ______ medical table.", o:["small round","round small","medical small","small medical round"]},
+        {q:"He is a ______ American soldier.", o:["tall American","American tall","tall and American","more tall American"]},
+        {q:"She was wearing a ______ silk saree.", o:["beautiful expensive","expensive beautiful","silk expensive beautiful","expensive silk beautiful"]},
+        {q:"He is a ______ handsome tall man.", o:["handsome dark-skinned tall","dark-skinned handsome tall","handsome tall dark-skinned","tall handsome dark-skinned"]},
+        {q:"Please revise the ______ pages.", o:["five next","next five","nextly five","five nextly"]},
+        {q:"I cannot prepare tea for you; there is ______ milk in the refrigerator.", o:["little","a little","the little","any"]},
+        {q:"The ______ remarks that he made were very suggestive.", o:["few","a few","the few","any"]},
+        {q:"______ knowledge of shoemaking proved useful to him.", o:["Little","A little","The little","Few"]},
+        {q:"This is ______ major issue.", o:["a","the most","more","very"]},
+        {q:"The patient is ______ better today.", o:["much","more","very","many"]},
+        {q:"He is the ______ person in our village.", o:["oldest","eldest","more old","older"]},
+        {q:"Have you bought ______ apples?", o:["some","any","much","little"]}
+    ];
+
+    function load() {
+        var item = questions[currentIdx];
+        document.getElementById("q-num").innerText = "प्रशन " + (currentIdx + 1) + "/50";
+        document.getElementById("question").innerText = item.q;
+        
+        var optDiv = document.getElementById("options");
+        optDiv.innerHTML = "";
+        
+        for (var i = 0; i < item.o.length; i++) {
+            var btn = document.createElement("button");
+            btn.className = "opt-btn";
+            btn.innerText = item.o[i];
+            btn.onclick = function() {
+                var all = document.getElementsByClassName("opt-btn");
+                for(var j=0; j<all.length; j++) all[j].classList.remove("selected");
+                this.classList.add("selected");
+            };
+            optDiv.appendChild(btn);
+        }
+    }
+
+    function change(dir) {
+        var next = currentIdx + dir;
+        if (next >= 0 && next < questions.length) {
+            currentIdx = next;
+            load();
+        } else if (next == questions.length) {
+            alert("अभ्यास समाप्त! Target Academy आपके उज्जवल भविष्य की कामना करता है।");
+        }
+    }
+
+    window.onload = load;
+</script>
+
+</body>
+</html>
+
